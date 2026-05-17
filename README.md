@@ -10,7 +10,56 @@ A Claude-powered CLI agent that solves complex math, physics, and chemistry prob
 
 ## Prompt Qualification
 
-The system prompt below was evaluated against the [Prompt Evaluation Rubric](this.md) and scored **9 / 9**.
+The system prompt was evaluated against the [Prompt Evaluation Rubric](https://github.com/sidharth80/EduSolve/blob/main/README.md) using a judge LLM and scored **9 / 9**.
+
+### Evaluator Test Output
+
+The prompt was passed to a judge model running the rubric criteria. This is the raw evaluator output:
+
+```json
+{
+  "explicit_reasoning": {
+    "score": "PASS",
+    "reason": "Rule 1 explicitly states 'Always reason step-by-step. Think before you answer.' — both required phrases are present."
+  },
+  "structured_output": {
+    "score": "PASS",
+    "reason": "A strict JSON schema with named fields (steps, verification, confidence, final_answer, follow_up_possible) is fully specified and labeled 'strict JSON'."
+  },
+  "tool_separation": {
+    "score": "PASS",
+    "reason": "Rule 3 reserves FUNCTION_CALL for computation/conversion while numbered reasoning steps handle inference; the example shows this split clearly across Step 1 (FUNCTION_CALL) vs Steps 2-4 (REASON/LOGIC)."
+  },
+  "conversation_loop": {
+    "score": "PASS",
+    "reason": "Rule 7 ('Update your working context after each tool result') and the 'follow_up_possible' flag in the schema explicitly support multi-turn continuation."
+  },
+  "instructional_framing": {
+    "score": "PASS",
+    "reason": "A concrete worked example (car acceleration problem) demonstrates the exact step format, tag usage, FUNCTION_CALL syntax, and verification style expected."
+  },
+  "internal_self_checks": {
+    "score": "PASS",
+    "reason": "Rule 4 mandates a post-computation sanity check or dimensional analysis, and 'verification' is a required top-level field in the output schema."
+  },
+  "reasoning_type_awareness": {
+    "score": "PASS",
+    "reason": "Rule 2 requires tagging every step with an explicit type from a defined vocabulary ([ARITHMETIC], [ALGEBRA], [PHYSICS], [LOGIC], [LOOKUP]), captured in the step schema's 'type' field."
+  },
+  "fallbacks": {
+    "score": "PASS",
+    "reason": "Rule 5 specifies a concrete confidence threshold (< 80%) and requires the model to state confidence and provide a fallback approach when uncertain; the 'confidence' field (0-100) reinforces this."
+  },
+  "overall_clarity": {
+    "score": "PASS",
+    "reason": "Rules are numbered and unambiguous, the output schema is machine-parseable, the example is well-aligned with the schema, and the tag vocabulary is closed — collectively minimizing hallucination and drift risk."
+  },
+  "total_score": "9/9",
+  "verdict": "The EduSolve prompt is exceptionally well-constructed. It earns a clean 9/9 by covering every rubric criterion: explicit chain-of-thought instructions, a strict parseable JSON schema, clear tool-vs-reasoning separation, multi-turn support hooks, a worked example, mandatory self-verification, typed reasoning tags, a quantified confidence-based fallback policy, and clear unambiguous language throughout."
+}
+```
+
+### Human-readable Scorecard
 
 | # | Criterion | Score | Evidence |
 |---|-----------|-------|---------|
